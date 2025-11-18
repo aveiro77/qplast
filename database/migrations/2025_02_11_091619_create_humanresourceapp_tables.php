@@ -117,6 +117,7 @@ return new class extends Migration
             $table->decimal('hrg_grosir', 10, 2);
             $table->decimal('stock', 10, 2);
             $table->string('status');
+            $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

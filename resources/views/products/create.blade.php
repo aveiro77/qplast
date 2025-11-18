@@ -38,7 +38,8 @@
 
             <div class="card-body">
 
-                <form action="{{ route('products.store') }}" method="POST">
+                <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                {{-- <form method="POST" action="/products/store" enctype="multipart/form-data"> --}}
                     @csrf
 
                     <div class="mb-3">
@@ -95,6 +96,11 @@
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload Image</label>
+                        <input type="file" name="image" id="image" class="image-preview-filepond">
                     </div>
         
                     <button type="submit" class="btn btn-primary">Save</button>

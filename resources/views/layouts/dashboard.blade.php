@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="{{ asset('mazer/assets/extensions/@icon/dripicons/dripicons.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/compiled/css/ui-icons-dripicons.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link rel="stylesheet" href="{{ asset('mazer/assets/extensions/filepond/filepond.css') }}">
+    <link rel="stylesheet" href="{{ asset('mazer/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css') }}">
+    <link rel="stylesheet" href="{{ asset('mazer/assets/extensions/toastify-js/src/toastify.css') }}">
 </head>
 
 <body>
@@ -224,6 +228,20 @@
     <script src="{{ asset('mazer/assets/static/js/pages/ui-chartjs.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+
+    <!--  upload image -->
+    <script src="{{ asset('mazer/assets/compiled/js/app.js') }}"></script>   
+    <script src="{{ asset('mazer/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/filepond/filepond.js') }}"></script>
+    <script src="{{ asset('mazer/assets/extensions/toastify-js/src/toastify.js') }}"></script>
+    <script src="{{ asset('mazer/assets/static/js/pages/filepond.js') }}"></script>
+
     <script>
         let date = flatpickr(".date", {
             dateFormat: "Y-m-d",
@@ -248,6 +266,24 @@
             dateFormat: "Y-m-d H:i:s",
             minTime: "07:00",
             maxTime: "21:00"
+        });
+
+
+        // image preview filepond on edit page
+        const inputElement = document.querySelector('.image-preview-filepond');
+        const pond = FilePond.create( inputElement , {
+            allowImagePreview: true,
+            allowImageCrop: true,
+            imageCropAspectRatio: '1:1',
+            allowImageResize: true,
+            imageResizeTargetWidth: 200,
+            imageResizeTargetHeight: 200,
+            allowImageTransform: true,
+            allowFileTypeValidation: true,
+            allowFileSizeValidation: true,
+            maxFileSize: '2MB',
+            acceptedFileTypes: ['image/*'],
+            source: inputElement.dataset.src,
         });
     </script>
 

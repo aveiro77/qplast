@@ -22,6 +22,7 @@ class Product extends Model
         'hrg_grosir',
         'status',
         'stock',
+        'image',
     ];
 
     public function category()

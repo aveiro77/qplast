@@ -110,6 +110,11 @@
                             <option value="Inactive" {{ $product->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload Image</label>
+                        <input type="file" class="image-preview-filepond" name="image" id="image">
+                    </div>
         
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
