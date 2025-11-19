@@ -84,5 +84,27 @@ class DatabaseSeeder extends Seeder
             'employee_id' => 2,
         ]);
 
+        // Seed Customers table
+        DB::table('customers')->insert([
+            [
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'type' => 'Regular',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'type' => 'Premium',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
+
     }
 }

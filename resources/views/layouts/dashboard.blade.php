@@ -274,14 +274,6 @@
             minTime: "07:00",
             maxTime: "21:00"
         });
-
-        // image preview filepond on create page
-        const inputElement = document.querySelector('input[type="file"].image-preview-filepond');
-        // Create FilePond instance
-        const pond = FilePond.create(inputElement, {
-            storeAsFile: true, // <--- INI KUNCINYA
-        });
-
     </script>
 
 </body>
