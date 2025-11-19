@@ -122,6 +122,17 @@ return new class extends Migration
             $table->softDeletes();
         });
 
+        Schema::create('customers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique()->nullable();
+            $table->string('phone');
+            $table->text('address')->nullable();
+            $table->string('type')->optional('Regular', 'Premium')->default('Regular');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
     }
 
     public function down()
@@ -136,5 +147,6 @@ return new class extends Migration
         Schema::dropIfExists('departments');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('products');
+        Schema::dropIfExists('customers');
     }
 };

@@ -10,6 +10,7 @@ use App\Http\Controllers\PayrollsController;
 use App\Http\Controllers\PresencesController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -30,6 +31,8 @@ Route::middleware(['auth'])->group(function () {
     // Resource routes for categories
     Route::resource('categories', CategoryController::class)->middleware(['role:Developer,Cashier']);
     
+    Route::resource('customers', CustomerController::class)->middleware(['role:Developer,Cashier']);
+
     // Resource routes for departments
     Route::resource('departments', DepartmentController::class)->middleware(['role:HR']);
 

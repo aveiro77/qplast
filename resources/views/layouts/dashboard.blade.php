@@ -190,6 +190,13 @@
                                 </a>
                             </li>
 
+                            <li class="sidebar-item">
+                                <a href="{{ url('/customers') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Customers</span>
+                                </a>
+                            </li>
+
                         @endif
 
                         <li class="sidebar-item">
@@ -268,23 +275,13 @@
             maxTime: "21:00"
         });
 
-
-        // image preview filepond on edit page
-        const inputElement = document.querySelector('.image-preview-filepond');
-        const pond = FilePond.create( inputElement , {
-            allowImagePreview: true,
-            allowImageCrop: true,
-            imageCropAspectRatio: '1:1',
-            allowImageResize: true,
-            imageResizeTargetWidth: 200,
-            imageResizeTargetHeight: 200,
-            allowImageTransform: true,
-            allowFileTypeValidation: true,
-            allowFileSizeValidation: true,
-            maxFileSize: '2MB',
-            acceptedFileTypes: ['image/*'],
-            source: inputElement.dataset.src,
+        // image preview filepond on create page
+        const inputElement = document.querySelector('input[type="file"].image-preview-filepond');
+        // Create FilePond instance
+        const pond = FilePond.create(inputElement, {
+            storeAsFile: true, // <--- INI KUNCINYA
         });
+
     </script>
 
 </body>

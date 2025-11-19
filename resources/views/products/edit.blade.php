@@ -48,7 +48,7 @@
                     </div>
                 @endif
                 
-                <form action="{{ route('products.update', $product->id) }}" method="POST">
+                <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -112,8 +112,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="image" class="form-label">Upload Image</label>
-                        <input type="file" class="image-preview-filepond" name="image" id="image">
+                        <label for="image" class="form-label">Upload Image (Leave empty to keep current image)</label>
+                        
+                        @if($product->image)
+                            <div class="mb-2">
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="Current Image" style="max-width: 150px; border-radius: 5px;">
+                                <p class="text-muted small">Current Image</p>
+                            </div>
+                        @endif
+
+                        <input type="file" name="image" id="image" class="image-preview-filepond">
                     </div>
         
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -124,4 +132,47 @@
     </section>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Ambil elemen-elemen yang dibutuhkan
+        const unitSelect = document.getElementById('unit');
+        const hrgEcer = document.getElementById('hrg_ecer');
+        const hrgBall = document.getElementById('hrg_ball');
+        const hrgGrosir = document.getElementById('hrg_grosir');
+
+        // 2. Fungsi untuk mengatur Read Only
+        function togglePriceInputs() {
+            const unit = unitSelect.value;
+
+            if (unit === 'Ball') {
+                // KONDISI: BALL
+                // Harga Ecer -> Read Only & di-nol-kan
+                hrgEcer.setAttribute('readonly', true);
+                hrgEcer.value = 0; 
+                // hrgEcer.style.backgroundColor = '#fd0505ff'; // Bikin abu-abu biar jelas
+
+                // Harga Ball & Grosir -> Bisa diedit
+                hrgBall.removeAttribute('readonly');
+                hrgGrosir.removeAttribute('readonly');
+            } else if (unit === 'Pcs') {
+                // KONDISI: PCS
+                // Harga Ecer -> Bisa diedit
+                hrgEcer.removeAttribute('readonly');
+
+                // Harga Ball & Grosir -> Read Only & di-nol-kan
+                hrgBall.setAttribute('readonly', true);
+                hrgBall.value = 0;
+                hrgGrosir.setAttribute('readonly', true);
+                hrgGrosir.value = 0;
+            }
+        }
+
+        // 3. Pasang Event Listener (Agar jalan saat user ganti pilihan)
+        unitSelect.addEventListener('change', togglePriceInputs);
+
+        // 4. Panggil fungsi sekali saat halaman dimuat 
+        // (berguna jika terjadi error validasi dan halaman reload, agar status input tetap benar)
+        togglePriceInputs();
+    });
+</script>
 @endsection

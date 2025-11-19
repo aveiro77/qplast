@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -70,7 +71,9 @@ class ProductController extends Controller
     // Update the specified employee in storage
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $product = Product::findOrFail($id);
+
+        $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'description' => 'string|max:255|nullable',
@@ -84,13 +87,26 @@ class ProductController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
         ]);
 
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        // Handle image upload
         if ($request->hasFile('image')) {
-            $product->image = $request->file('image')->store('product_images', 'public');
-            $product->save();
+        
+            // A. Hapus gambar lama jika ada
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            // B. Simpan gambar baru
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            
+            // C. Masukkan path baru ke array data
+            $validatedData['image'] = $imagePath;
+        } else {
+            // Jika tidak ada gambar baru, HAPUS key 'image' dari validatedData
+            // agar Laravel tidak menimpa kolom image di DB menjadi NULL
+            unset($validatedData['image']);
         }
 
+        $product->update($validatedData);
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
@@ -105,7 +121,11 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
         $product->delete();
+
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }

@@ -60,7 +60,7 @@
                                     <form action="{{ route('categories.destroy', $role->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">Delete</button>
                                     </form>
                                 </td>
                             </tr>

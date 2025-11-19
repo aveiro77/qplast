@@ -152,5 +152,27 @@ class HumanResourceSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
         ]);
+
+        // Seed Customers table
+        DB::table('customers')->insert([
+            [
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'type' => 'regular',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'type' => 'premium',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
     }
 }

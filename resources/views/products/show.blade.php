@@ -79,9 +79,19 @@
                         </div>
 
                     </div>
+                    <div>
+                        <label class="form-label">Product Image</label>
+                        <div>
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image" style="max-width: 200px; max-height: 200px;">
+                            @else
+                                <p>No image available.</p>
+                            @endif
+                    </div>
                 </div>
-        
-                <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+
+                <a href="{{ route('products.index') }}" class="btn btn-secondary mt-3">Back to Products</a>
+                
             </div>
         </div>
     </section>
