@@ -11,13 +11,37 @@ class PosController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index()
+    // {
+    //     return view('pos.index', [
+    //         'customers' => Customer::all(),
+    //         'products'  => Product::all()
+    //     ]);
+
+    //     return view('pos.index', [
+    //         'customers' => Customer::all(),
+    //         'products'  => $products
+    //     ]);
+    // }
+
     public function index()
     {
+        $products = Product::all()->map(function ($p) {
+            // Sesuaikan kolom foto di database Anda
+            $file = $p->foto ?? $p->photo ?? $p->image ?? $p->foto_produk;
+
+            // Jika foto tersimpan di storage
+            $p->image = $file ? asset('storage/' . $file) : asset('no-image.png');
+
+            return $p;
+        });
+
         return view('pos.index', [
             'customers' => Customer::all(),
-            'products'  => Product::all()
+            'products'  => $products
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.

@@ -63,6 +63,28 @@
         </tbody>
     </table>
 
+    {{-- // tambahan --}}
+    <h3 class="mt-6 mb-2 font-semibold text-lg">Pilih Produk</h3>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <template x-for="p in products" :key="p.id">
+            <div class="border rounded shadow hover:shadow-lg cursor-pointer"
+                @click="addProductToCart(p)">
+
+                <img :src="p.image" class="w-full h-32 object-cover rounded-t">
+
+                <div class="p-2 text-center">
+                    <div class="font-semibold" x-text="p.name"></div>
+                    <div class="text-sm text-gray-600" x-text="'Stok: ' + p.stok"></div>
+                    <div class="mt-1 text-blue-600 font-bold" 
+                        x-text="formatRupiah(p.hrg_ecer)"></div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    {{-- // end tambahan --}}
+
     <button class="mt-3 bg-blue-500 text-white px-3 py-2 rounded"
             @click="addItem">+ Tambah Item</button>
 
@@ -161,7 +183,30 @@ function posApp(productsData) {
                 style: 'currency',
                 currency: 'IDR'
             }).format(value);
-        }
+        },
+
+        addProductToCart(p) {
+            // jika sudah ada di cart → tambah qty
+            let existing = this.cart.find(i => i.product_id == p.id);
+
+            if (existing) {
+                existing.qty++;
+                this.updateBallPrices();
+                return;
+            }
+
+            // jika produk baru → masukkan ke cart
+            this.cart.push({
+                product_id: p.id,
+                qty: 1,
+                unit: p.unit,
+                harga: p.hrg_ecer,
+                subtotal: p.hrg_ecer,
+            });
+
+            this.updateBallPrices();
+        },
+
     }
 }
 
