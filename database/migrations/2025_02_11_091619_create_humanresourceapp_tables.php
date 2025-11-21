@@ -133,6 +133,28 @@ return new class extends Migration
             $table->softDeletes();
         });
 
+        Schema::create('sales', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('note')->nullable();
+            $table->foreignId('customer_id')->constrained('customers');
+            $table->decimal('total_price', 15, 2);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('sale_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('sale_id')->constrained('sales');
+            $table->foreignId('product_id')->constrained('products');
+            $table->decimal('quantity', 10, 2);
+            $table->string('unit');
+            $table->decimal('price', 15, 2);
+            $table->decimal('subtotal', 15, 2);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
     }
 
     public function down()
@@ -148,5 +170,7 @@ return new class extends Migration
         Schema::dropIfExists('categories');
         Schema::dropIfExists('products');
         Schema::dropIfExists('customers');
+        Schema::dropIfExists('sales');
+        Schema::dropIfExists('sale_details');
     }
 };

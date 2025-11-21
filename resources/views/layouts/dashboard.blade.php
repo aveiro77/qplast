@@ -177,6 +177,13 @@
                         @if (session('role')  == 'Cashier')
 
                             <li class="sidebar-item">
+                                <a href="{{ url('/pos') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Pos</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
                                 <a href="{{ url('/categories') }}" class='sidebar-link'>
                                     <i class="bi bi-tag"></i>
                                     <span>Categories</span>
@@ -225,6 +232,7 @@
             </footer>
         </div>
     </div>
+    
     
     <script src="{{ asset('mazer/assets/static/js/components/dark.js') }}"></script>
     <script src="{{ asset('mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>

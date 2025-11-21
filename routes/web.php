@@ -13,6 +13,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
@@ -25,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Dashboard chart, buatan sendiri
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Route::get('/dashboard/presence', [DashboardController::class, 'presence']);
 
     // Resource routes for categories
@@ -37,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('departments', DepartmentController::class)->middleware(['role:HR']);
 
     Route::resource('products', ProductController::class)->middleware(['role:Developer,Cashier']);
+
+    Route::resource('pos', PosController::class)->middleware(['role:Developer,Cashier']);
+    // Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+    // Route::post('/pos/store', [PosController::class, 'store'])->name('pos.store');
     
 
     // Resource routes for roles
