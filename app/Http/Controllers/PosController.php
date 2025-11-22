@@ -36,7 +36,7 @@ class PosController extends Controller
             return $p;
         });
 
-        return view('pos.index', [
+        return view('pos.proto', [
             'customers' => Customer::all(),
             'products'  => $products
         ]);

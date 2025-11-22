@@ -33,9 +33,7 @@
             <template x-for="(item, index) in cart" :key="index">
                 <tr>
                     <td class="border p-2">
-                        <select class="w-full border p-1" 
-                                x-model="item.product_id"
-                                @change="updateItem(index)">
+                        <select class="w-full border p-1" x-model="item.product_id" @change="updateItem(index)">
                             <option value="">-- pilih --</option>
                             <template x-for="p in products">
                                 <option :value="p.id" x-text="p.name"></option>
@@ -75,7 +73,7 @@
 
                 <div class="p-2 text-center">
                     <div class="font-semibold" x-text="p.name"></div>
-                    <div class="text-sm text-gray-600" x-text="'Stok: ' + p.stok"></div>
+                    <div class="text-sm text-gray-600" x-text="'Stok: ' + p.stock"></div>
                     <div class="mt-1 text-blue-600 font-bold" 
                         x-text="formatRupiah(p.hrg_ecer)"></div>
                 </div>
@@ -85,24 +83,22 @@
 
     {{-- // end tambahan --}}
 
-    <button class="mt-3 bg-blue-500 text-white px-3 py-2 rounded"
-            @click="addItem">+ Tambah Item</button>
+    <button class="mt-3 bg-blue-500 text-white px-3 py-2 rounded" @click="addItem">+ Tambah Item</button>
 
     {{-- TOTAL --}}
     <div class="mt-5 text-right text-xl font-bold">
         Total: <span x-text="formatRupiah(grandTotal)"></span>
     </div>
 
-    <form method="POST" action="{{ route('pos.store') }}"
-      @submit.prevent="submitForm">
-    @csrf
-    <input type="hidden" name="customer_id" x-model="customer_id">
-    <input type="hidden" name="cart" x-model="cartJson">
+    <form method="POST" action="{{ route('pos.store') }}" @submit.prevent="submitForm">
+        @csrf
+        <input type="hidden" name="customer_id" x-model="customer_id">
+        <input type="hidden" name="cart" x-model="cartJson">
 
-    <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded">
-        Simpan Transaksi
-    </button>
-</form>
+        <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded">
+            Simpan Transaksi
+        </button>
+    </form>
 
 
 </div>

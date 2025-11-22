@@ -87,6 +87,15 @@ class DatabaseSeeder extends Seeder
         // Seed Customers table
         DB::table('customers')->insert([
             [
+                'name' => 'Customer',
+                'email' => $faker->unique()->safeEmail,
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'type' => 'Regular',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
                 'name' => $faker->name,
                 'email' => $faker->unique()->safeEmail,
                 'phone' => $faker->phoneNumber,
@@ -101,6 +110,27 @@ class DatabaseSeeder extends Seeder
                 'phone' => $faker->phoneNumber,
                 'address' => $faker->address,
                 'type' => 'Premium',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
+
+        DB::table('categories')->insert([
+            ['name' => 'Botol air zam-zam', 'description' => 'Botol dengan berbagai ukuran', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+        ]);
+
+        DB::table('products')->insert([
+            [
+                'name' => 'Botol Zam-Zam 600ml',
+                'description' => 'Botol zam-zam ukuran 600ml',
+                'stock' => 100,
+                'category_id' => 1,
+                'unit' => 'Ball',
+                'hpp' => 325000,
+                'hrg_ecer' => 2500,
+                'hrg_ball' => 330000,
+                'hrg_grosir' => 335000,
+                'status' => 'active',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
