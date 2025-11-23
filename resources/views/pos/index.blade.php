@@ -93,7 +93,7 @@
     <form method="POST" action="{{ route('pos.store') }}" @submit.prevent="submitForm">
         @csrf
         <input type="hidden" name="customer_id" x-model="customer_id">
-        <input type="hidden" name="cart" x-model="cartJson">
+        <input type="hidden" name="cart" x-model="JSON.stringify(cart)">
 
         <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded">
             Simpan Transaksi

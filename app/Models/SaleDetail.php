@@ -15,6 +15,13 @@ class SaleDetail extends Model
         'subtotal',
     ];
 
+    protected $casts = [
+        'price'    => 'float',
+        'subtotal' => 'float',
+        'quantity' => 'float',
+    ];
+
+
     public function sale()
     {
         return $this->belongsTo(Sale::class);
