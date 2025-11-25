@@ -4,7 +4,7 @@
 
 <div x-data='posApp(@json($products))'>
 
-    <header class="mb-3">
+    <header class="mb-1">
         <a href="#" class="burger-btn d-block d-xl-none">
             <i class="bi bi-justify fs-3"></i>
         </a>
@@ -51,19 +51,38 @@
                                 Total: <span x-text="formatRupiah(grandTotal)"></span>
                             </h4>
                         </div>
-                        <div class="card-content">
-                            <div class="card-body">
-                                <form method="POST" action="{{ route('pos.store') }}" @submit.prevent="submitForm">
-                                    @csrf
-                                    <input type="hidden" name="customer_id" x-model="customer_id">
-                                    <input type="hidden" name="cart" x-model="cartJson">
-
-                                    <button class="mt-3 bg-green-600 text-white px-4 py-2 rounded">
-                                        Simpan Transaksi
-                                    </button>
-                                </form>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Pembayaran</label>
+                                <input type="number" class="form-control" x-model.number="pembayaran" @input="updateKembalian" placeholder="0">
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label class="form-label">Kembalian: <span x-text="formatRupiah(kembalian)"></span></label>
+                                <div class="alert" :class="kembalian < 0 ? 'alert-danger' : 'alert-success'" role="alert" x-show="pembayaran > 0">
+                                    <span x-show="kembalian < 0">Pembayaran kurang sebesar <strong x-text="formatRupiah(Math.abs(kembalian))"></strong></span>
+                                    <span x-show="kembalian >= 0">Kembalian: <strong x-text="formatRupiah(kembalian)"></strong></span>
+                                </div>
+                            </div>
+
+                            <form method="POST" action="{{ route('pos.store') }}" @submit.prevent="submitForm">
+                                @csrf
+                                <input type="hidden" name="customer_id" x-model="customer_id">
+                                <input type="hidden" name="cart" x-model="cartJson">
+
+                                <button class="mt-1 btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed" 
+                                        :disabled="isLoading"
+                                        type="button" @click="submitForm">
+                                    <span x-show="!isLoading">Simpan Transaksi</span>
+                                    <span x-show="isLoading" class="inline-flex items-center gap-2">
+                                        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                            Menyimpan...
+                                    </span>
+                                </button>
+                            </form>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -76,7 +95,7 @@
                         <div class="card-content">
                             <!-- table with dark -->
                             <div class="table-responsive">
-                                <table class="table table-dark mb-0">
+                                <table class="table table-dark">
                                     <thead>
                                         <tr>
                                             <th>Product</th>
@@ -119,12 +138,30 @@
                 </div>
             </div>
         </section>
-    </div>    
+    </div>
+
+    <section id="filter-category" class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <label class="form-label fw-bold">Filter Kategori</label>
+                        <select class="form-select" x-model="selected_category_id">
+                            <option value="0">ALL CATEGORY</option>
+                            <template x-for="cat in categoriesData" :key="cat.id">
+                                <option :value="cat.id" x-text="cat.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section id="content-types">
         <div class="row mt-3">
-            <template x-for="p in products" :key="p.id">
-                <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
+            <template x-for="p in filteredProducts" :key="p.id">
+                <div class="col-xl-3 col-md-4 col-sm-6 mb-2">
                     <!-- 
                         1. @click ditaruh di sini agar seluruh card bisa diklik.
                         2. cursor: pointer agar user tahu ini bisa diklik.
@@ -150,11 +187,11 @@
                         <div class="card-content d-flex flex-column flex-grow-1">
                             <div class="card-body">
                                 <!-- Menggunakan x-text langsung pada h5 untuk judul -->
-                                <h5 class="card-title" x-text="p.name"></h5>
-                                
+                                <h6 class="card-title" x-text="p.name"></h6>
+                                <h6 class="card-title" x-text="'Satuan:' +' '+ p.unit"></h6>
                                 <p class="card-text mt-3">
                                     <span class="d-block text-primary fw-bold" x-text="formatRupiah(p.hrg_ecer)"></span>
-                                    <small class="text-muted" x-text="'Stok: ' + p.stock"></small>
+                                    <small class="text-muted" x-text="'Stok: ' + p.stock +' '+ p.unit"></small>
                                 </p>
                             </div>
                         </div>
@@ -171,19 +208,17 @@
     function posApp(productsData) {
         return {
             products: productsData,
-            customer_id: "",
+            categoriesData: @json($categories),
+            customer_id: 1,
             cart: [],
+            isLoading: false,
+            pembayaran: 0,
+            kembalian: 0,
+            selected_category_id: 0,
 
-            // addItem() {
-            //     this.cart.push({
-            //         product_id: "",
-            //         name: "",
-            //         qty: 1,
-            //         unit: "",
-            //         harga: 0,
-            //         subtotal: 0
-            //     });
-            // },
+            updateKembalian() {
+                this.kembalian = this.pembayaran - this.grandTotal;
+            },
 
             updateItem(index) {
                 let item = this.cart[index];
@@ -225,18 +260,90 @@
                 return JSON.stringify(this.cart);
             },
 
-            submitForm() {
+            get filteredProducts() {
+                if (this.selected_category_id === 0 || this.selected_category_id === '0') {
+                    return this.products;
+                }
+                return this.products.filter(p => p.category_id == this.selected_category_id);
+            },
+
+            async submitForm() {
                 if (!this.customer_id) {
-                    alert("Customer belum dipilih!");
+                    this.showToast("Customer belum dipilih!", "error");
                     return;
                 }
                 if (this.cart.length === 0) {
-                    alert("Cart masih kosong!");
+                    this.showToast("Cart masih kosong!", "error");
+                    return;
+                }
+                if (this.pembayaran === 0) {
+                    this.showToast("Pembayaran belum diisi!", "error");
+                    return;
+                }
+                if (this.pembayaran < this.grandTotal) {
+                    this.showToast("Pembayaran kurang sebesar " + this.formatRupiah(this.grandTotal - this.pembayaran), "error");
                     return;
                 }
 
-                // submit form
-                document.querySelector("form").submit();
+                this.isLoading = true;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('_token', document.querySelector('input[name="_token"]').value);
+                    formData.append('customer_id', this.customer_id);
+                    formData.append('cart', JSON.stringify(this.cart));
+
+                    const response = await fetch("{{ route('pos.store') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        this.showToast(data.message, "success");
+                        // Buka halaman cetak struk di tab baru
+                        if (data.receipt_url) {
+                            window.open(data.receipt_url, '_blank');
+                        }
+                        // Reset form setelah sukses
+                         this.cart = [];
+                        this.customer_id = 1;
+                        this.pembayaran = 0;
+                        this.kembalian = 0;
+                        this.selected_category_id = 0;
+                    } else {
+                        this.showToast(data.message || "Terjadi kesalahan", "error");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showToast("Terjadi kesalahan jaringan", "error");
+                } finally {
+                    this.isLoading = false;
+                }
+            },
+
+            showToast(message, type = 'success') {
+                const bgColor = type === 'success' ? '#22c55e' : '#ef4444';
+                
+                if (typeof Toastify !== 'undefined') {
+                    Toastify({
+                        text: message,
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: bgColor,
+                        stopOnFocus: true
+                    }).showToast();
+                } else {
+                    // Fallback jika Toastify belum loaded
+                    alert(message);
+                }
             },
 
             formatRupiah(value) {

@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     //Route::resource('pos', PosController::class)->middleware(['role:Developer,Cashier']);
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/pos/store', [PosController::class, 'store'])->name('pos.store');
+    Route::get('/pos/{id}/receipt', [PosController::class, 'receipt'])->name('pos.receipt');
     
 
     // Resource routes for roles

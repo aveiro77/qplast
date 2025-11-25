@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\Sale;
 use App\Models\SaleDetail;
+use App\Models\Category;
 
 
 
@@ -16,14 +17,20 @@ class PosController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     // public function index()
     // {
-    //     return view('pos.index', [
-    //         'customers' => Customer::all(),
-    //         'products'  => Product::all()
-    //     ]);
+    //     $products = Product::all()->map(function ($p) {
+    //         // Sesuaikan kolom foto di database Anda
+    //         $file = $p->foto ?? $p->photo ?? $p->image ?? $p->foto_produk;
 
-    //     return view('pos.index', [
+    //         // Jika foto tersimpan di storage
+    //         $p->image = $file ? asset('storage/' . $file) : asset('storage/noimage.jpg');
+
+    //         return $p;
+    //     });
+
+    //     return view('pos.proto', [
     //         'customers' => Customer::all(),
     //         'products'  => $products
     //     ]);
@@ -41,9 +48,13 @@ class PosController extends Controller
             return $p;
         });
 
+        // Import categories untuk dropdown filter
+        $categories = \App\Models\Category::all();
+
         return view('pos.proto', [
-            'customers' => Customer::all(),
-            'products'  => $products
+            'customers'  => Customer::all(),
+            'products'   => $products,
+            'categories' => $categories
         ]);
     }
 
@@ -64,7 +75,7 @@ class PosController extends Controller
         // dd($request->all());
 
         // 1. Validasi input
-        $request->validate([
+        $validated = $request->validate([
             'customer_id' => 'required',
             'cart'        => 'required'
         ]);
@@ -73,7 +84,11 @@ class PosController extends Controller
         $cart = json_decode($request->cart, true);
 
         if (!$cart || count($cart) == 0) {
-            return back()->with('error', 'Keranjang kosong!');
+            $errorMsg = 'Keranjang kosong!';
+            if ($request->expectsJson() || $request->isJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return back()->with('error', $errorMsg);
         }
 
         // 3. Hitung total transaksi
@@ -112,14 +127,37 @@ class PosController extends Controller
 
             DB::commit();
 
-            return redirect()->route('pos.sukses')->with('success', 'Transaksi berhasil disimpan!');
+            // Return JSON untuk AJAX, redirect untuk non-AJAX
+            if ($request->expectsJson() || $request->isJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Transaksi berhasil disimpan!',
+                    'sale_id' => $sale->id,
+                    'total_price' => $total,
+                    'receipt_url' => route('pos.receipt', $sale->id)
+                ], 200);
+            }
+
+            return redirect()->route('pos.index')->with('success', 'Transaksi berhasil disimpan!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Error: '.$e->getMessage());
+            $errorMsg = 'Error: ' . $e->getMessage();
+            if ($request->expectsJson() || $request->isJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 500);
+            }
+            return back()->with('error', $errorMsg);
         }
     }
 
+    /**
+     * Display receipt for printing
+     */
+    public function receipt($id)
+    {
+        $sale = Sale::with('saleDetails.product', 'customer')->findOrFail($id);
+        return view('pos.receipt', compact('sale'));
+    }
 
     /**
      * Display the specified resource.

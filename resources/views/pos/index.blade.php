@@ -95,8 +95,17 @@
         <input type="hidden" name="customer_id" x-model="customer_id">
         <input type="hidden" name="cart" x-model="JSON.stringify(cart)">
 
-        <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded">
-            Simpan Transaksi
+        <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed" 
+                :disabled="isLoading"
+                type="button" @click="submitForm">
+            <span x-show="!isLoading">Simpan Transaksi</span>
+            <span x-show="isLoading" class="inline-flex items-center gap-2">
+                <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Menyimpan...
+            </span>
         </button>
     </form>
 
@@ -108,8 +117,9 @@
 function posApp(productsData) {
     return {
         products: productsData,
-        customer_id: "",
+        customer_id: 1,
         cart: [],
+        isLoading: false,
 
         addItem() {
             this.cart.push({
@@ -160,18 +170,73 @@ function posApp(productsData) {
             return JSON.stringify(this.cart);
         },
 
-        submitForm() {
+        async submitForm() {
             if (!this.customer_id) {
-                alert("Customer belum dipilih!");
+                this.showToast("Customer belum dipilih!", "error");
                 return;
             }
             if (this.cart.length === 0) {
-                alert("Cart masih kosong!");
+                this.showToast("Cart masih kosong!", "error");
                 return;
             }
 
-            // submit form
-            document.querySelector("form").submit();
+            this.isLoading = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('_token', document.querySelector('input[name="_token"]').value);
+                formData.append('customer_id', this.customer_id);
+                formData.append('cart', JSON.stringify(this.cart));
+
+                const response = await fetch("{{ route('pos.store') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.showToast(data.message, "success");
+                    // Buka halaman cetak struk di tab baru
+                    if (data.receipt_url) {
+                        window.open(data.receipt_url, '_blank');
+                    }
+                    // Reset form setelah sukses
+                    this.cart = [];
+                    this.customer_id = "";
+                } else {
+                    this.showToast(data.message || "Terjadi kesalahan", "error");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                this.showToast("Terjadi kesalahan jaringan", "error");
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
+        showToast(message, type = 'success') {
+            const bgColor = type === 'success' ? '#22c55e' : '#ef4444';
+            const textColor = '#ffffff';
+            
+            if (typeof Toastify !== 'undefined') {
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: bgColor,
+                    stopOnFocus: true
+                }).showToast();
+            } else {
+                // Fallback jika Toastify belum loaded
+                alert(message);
+            }
         },
 
         formatRupiah(value) {
