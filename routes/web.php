@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
@@ -33,6 +34,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('categories', CategoryController::class)->middleware(['role:Developer,Cashier']);
     
     Route::resource('customers', CustomerController::class)->middleware(['role:Developer,Cashier']);
+
+    Route::resource('sales', SaleController::class)->middleware(['role:Developer,Cashier']);
+    Route::post('/sales/export', [SaleController::class, 'export'])->name('sales.export')->middleware(['role:Developer,Cashier']);
 
     // Resource routes for departments
     Route::resource('departments', DepartmentController::class)->middleware(['role:HR']);

@@ -179,7 +179,14 @@
                             <li class="sidebar-item">
                                 <a href="{{ url('/pos') }}" class='sidebar-link'>
                                     <i class="bi bi-tag"></i>
-                                    <span>Pos</span>
+                                    <span>Cashier</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="{{ url('/sales') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Sales</span>
                                 </a>
                             </li>
 
@@ -242,7 +249,7 @@
     <script src="{{ asset('mazer/assets/extensions/chart.js/chart.umd.js') }}"></script>
     <script src="{{ asset('mazer/assets/static/js/pages/ui-chartjs.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!--  upload image -->
     <script src="{{ asset('mazer/assets/compiled/js/app.js') }}"></script>   
