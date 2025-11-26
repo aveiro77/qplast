@@ -206,9 +206,172 @@ class SaleController extends Controller
             ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 
+    public function edit($id)
+    {
+        $sale = Sale::with(['customer', 'saleDetails.product'])->findOrFail($id);
+        $products = Product::all()->map(function ($p) {
+            $file = $p->foto ?? $p->photo ?? $p->image ?? $p->foto_produk;
+            $p->image = $file ? asset('storage/' . $file) : asset('storage/noimage.jpg');
+            return $p;
+        });
+        $customers = Customer::all();
+
+        return view('sales.edit', compact('sale', 'products', 'customers'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $sale = Sale::findOrFail($id);
+
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'name' => 'nullable|string|max:191',
+            'note' => 'nullable|string',
+            'items' => 'required|string',
+        ]);
+
+        $items = json_decode($validated['items'], true);
+        if (!is_array($items) || count($items) === 0) {
+            return back()->withInput()->withErrors(['items' => 'No items provided.']);
+        }
+
+        $lineErrors = [];
+        foreach ($items as $i => $it) {
+            if (empty($it['product_id']) || !is_numeric($it['product_id'])) {
+                $lineErrors["items.$i.product_id"] = 'Product is required.';
+                continue;
+            }
+            if (empty($it['quantity']) || !is_numeric($it['quantity']) || $it['quantity'] <= 0) {
+                $lineErrors["items.$i.quantity"] = 'Quantity must be greater than zero.';
+            }
+            if (!isset($it['price']) || !is_numeric($it['price']) || $it['price'] < 0) {
+                $lineErrors["items.$i.price"] = 'Price must be zero or greater.';
+            }
+        }
+
+        if (!empty($lineErrors)) {
+            return back()->withInput()->withErrors($lineErrors);
+        }
+
+        $total = 0;
+        foreach ($items as $it) {
+            $qty = (float) $it['quantity'];
+            $price = (float) $it['price'];
+            $subtotal = $qty * $price;
+            $total += $subtotal;
+
+            $product = Product::find($it['product_id']);
+            if (!$product) {
+                return back()->withInput()->withErrors(['items' => 'Product not found (ID: ' . $it['product_id'] . ').']);
+            }
+
+            $oldQtyInSale = 0;
+            foreach ($sale->saleDetails as $oldDetail) {
+                if ($oldDetail->product_id == $it['product_id']) {
+                    $oldQtyInSale += $oldDetail->quantity;
+                }
+            }
+            $availableStock = $product->stock + $oldQtyInSale;
+            if ($availableStock < $qty) {
+                return back()->withInput()->withErrors(['items' => "Insufficient stock for product: {$product->name}. Available: {$availableStock}, requested: {$qty}"]);
+            }
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach ($sale->saleDetails as $oldDetail) {
+                $product = Product::find($oldDetail->product_id);
+                if ($product) {
+                    $product->stock += $oldDetail->quantity;
+                    $product->save();
+                }
+            }
+
+            SaleDetail::where('sale_id', $sale->id)->delete();
+
+            $sale->update([
+                'customer_id' => $validated['customer_id'],
+                'name' => $validated['name'] ?? 'Manual Sale',
+                'note' => $validated['note'] ?? null,
+                'total_price' => $total,
+            ]);
+
+            foreach ($items as $it) {
+                $qty = (float) $it['quantity'];
+                $price = (float) $it['price'];
+                $subtotal = $qty * $price;
+
+                SaleDetail::create([
+                    'sale_id' => $sale->id,
+                    'product_id' => $it['product_id'],
+                    'quantity' => $qty,
+                    'unit' => $it['unit'] ?? null,
+                    'price' => $price,
+                    'subtotal' => $subtotal,
+                ]);
+
+                $product = Product::find($it['product_id']);
+                if ($product) {
+                    $product->stock -= $qty;
+                    $product->save();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('sales.index')->with('success', 'Sale updated successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Error updating sale: ' . $e->getMessage());
+        }
+    }
+
     public function show($id)
     {
         $sale = Sale::with(['customer', 'saleDetails.product'])->findOrFail($id);
         return view('sales.show', compact('sale'));
+    }
+
+    /**
+     * Display printable view for a sale (A4 / quarto).
+     */
+    public function print($id)
+    {
+        $sale = Sale::with(['customer', 'saleDetails.product'])->findOrFail($id);
+        return view('sales.print', compact('sale'));
+    }
+
+    /**
+     * Delete a sale and its related details, restore stock.
+     */
+    public function destroy($id)
+    {
+        $sale = Sale::findOrFail($id);
+
+        DB::beginTransaction();
+        try {
+            // Restore product stock before deleting
+            foreach ($sale->saleDetails as $detail) {
+                $product = Product::find($detail->product_id);
+                if ($product) {
+                    $product->stock += $detail->quantity;
+                    $product->save();
+                }
+            }
+
+            // Delete sale details
+            SaleDetail::where('sale_id', $sale->id)->delete();
+
+            // Delete sale
+            $sale->delete();
+
+            DB::commit();
+
+            return redirect()->route('sales.index')->with('success', 'Sale deleted successfully and stock restored.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('sales.index')->with('error', 'Error deleting sale: ' . $e->getMessage());
+        }
     }
 }

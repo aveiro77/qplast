@@ -117,12 +117,32 @@
                 <!-- Action Buttons -->
                 <div class="d-flex justify-content-end gap-2 mt-4">
                     <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('sales.destroy', $sale->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                    <a href="{{ route('sales.print', $sale->id) }}" class="btn btn-primary" target="_blank">Print</a>
                     <a href="{{ route('sales.index') }}" class="btn btn-secondary">Back to Sales</a>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Apakah Anda yakin ingin menghapus data penjualan ini? Tindakan ini tidak dapat dibatalkan.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <form action="{{ route('sales.destroy', $sale->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
