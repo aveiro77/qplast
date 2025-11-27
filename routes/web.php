@@ -16,11 +16,16 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\CashController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::middleware(['auth'])->group(function () {
+
+    // Laporan Neraca (role:Cashier)
+    Route::get('/reports/neraca', [ReportController::class, 'index'])->name('reports.neraca')->middleware(['role:Cashier']);
+    Route::get('/reports/neraca/export', [ReportController::class, 'export'])->name('reports.neraca.export')->middleware(['role:Cashier']);
     
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

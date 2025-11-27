@@ -1,11 +1,17 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between mb-3">
-        <h4>Daftar Transaksi Kas</h4>
-        <a href="{{ route('cash.create') }}" class="btn btn-primary">Buat Transaksi Kas</a>
+        <h4>Finance</h4>
+        <a href="{{ route('cash.create') }}" class="btn btn-primary">New Transaction</a>
     </div>
+
+    <header class="mb-3">
+        <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+        </a>
+    </header>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
 <div class="container">
-    <h4>{{ $item->exists ? 'Edit Transaksi Kas' : 'Buat Transaksi Kas' }}</h4>
+    <h4>{{ $item->exists ? 'Edit Transaction' : 'New Transaction' }}</h4>
 
     @if($errors->any())
         <div class="alert alert-danger">

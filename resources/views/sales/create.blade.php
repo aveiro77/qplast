@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Sale Name</label>
-                            <input type="text" name="name" class="form-control" value="{{ old('name', 'Manual Sale') }}">
+                            <input type="text" name="name" class="form-control" value="{{ old('name', 'B2B') }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Note (optional)</label>

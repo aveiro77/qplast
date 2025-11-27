@@ -177,6 +177,13 @@
                         @if (session('role')  == 'Cashier')
 
                             <li class="sidebar-item">
+                                <a href="{{ url('/dashboard') }}" class='sidebar-link'>
+                                    <i class="bi bi-grid-fill"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>    
+
+                            <li class="sidebar-item">
                                 <a href="{{ url('/pos') }}" class='sidebar-link'>
                                     <i class="bi bi-tag"></i>
                                     <span>Cashier</span>
@@ -208,6 +215,13 @@
                                 <a href="{{ url('/customers') }}" class='sidebar-link'>
                                     <i class="bi bi-tag"></i>
                                     <span>Customers</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="{{ url('/cash') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Finance</span>
                                 </a>
                             </li>
 
