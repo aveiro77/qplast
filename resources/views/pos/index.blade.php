@@ -74,8 +74,7 @@
                 <div class="p-2 text-center">
                     <div class="font-semibold" x-text="p.name"></div>
                     <div class="text-sm text-gray-600" x-text="'Stok: ' + p.stock"></div>
-                    <div class="mt-1 text-blue-600 font-bold" 
-                        x-text="formatRupiah(p.hrg_ecer)"></div>
+                    <div class="mt-1 text-blue-600 font-bold" x-text="formatRupiah(p.unit === 'Ball' ? p.hrg_ball : p.hrg_ecer)""></div>
                 </div>
             </div>
         </template>

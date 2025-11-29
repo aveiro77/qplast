@@ -174,7 +174,7 @@
                         </li>
                         @endif
 
-                        @if (session('role')  == 'Cashier')
+                        @if (session('role')  == 'Manager')
 
                             <li class="sidebar-item">
                                 <a href="{{ url('/dashboard') }}" class='sidebar-link'>
@@ -224,6 +224,53 @@
                                     <span>Finance</span>
                                 </a>
                             </li>
+                            <li class="sidebar-item">
+                                <a href="{{ url('/reports/neraca') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Reports</span>
+                                </a>
+                            </li>
+
+                        @endif
+
+                        @if (session('role')  == 'Cashier')
+    
+
+                            <li class="sidebar-item">
+                                <a href="{{ url('/pos') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Cashier</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="{{ url('/sales') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Sales</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="{{ url('/categories') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Categories</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="{{ url('/products') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Products</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="{{ url('/customers') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Customers</span>
+                                </a>
+                            </li>
+
 
                         @endif
 

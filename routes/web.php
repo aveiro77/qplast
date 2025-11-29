@@ -24,8 +24,8 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 Route::middleware(['auth'])->group(function () {
 
     // Laporan Neraca (role:Cashier)
-    Route::get('/reports/neraca', [ReportController::class, 'index'])->name('reports.neraca')->middleware(['role:Cashier']);
-    Route::get('/reports/neraca/export', [ReportController::class, 'export'])->name('reports.neraca.export')->middleware(['role:Cashier']);
+    Route::get('/reports/neraca', [ReportController::class, 'index'])->name('reports.neraca')->middleware(['role:Cashier,Manager']);
+    Route::get('/reports/neraca/export', [ReportController::class, 'export'])->name('reports.neraca.export')->middleware(['role:Cashier,Manager']);
     
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -37,21 +37,21 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/dashboard/presence', [DashboardController::class, 'presence']);
 
     // Resource routes for categories
-    Route::resource('categories', CategoryController::class)->middleware(['role:Developer,Cashier']);
+    Route::resource('categories', CategoryController::class)->middleware(['role:Developer,Cashier,Manager']);
     
-    Route::resource('customers', CustomerController::class)->middleware(['role:Developer,Cashier']);
+    Route::resource('customers', CustomerController::class)->middleware(['role:Developer,Cashier,Manager']);
 
     // Cash transactions (kas masuk / kas keluar)
-    Route::resource('cash', CashController::class)->middleware(['role:Developer,Cashier']);
+    Route::resource('cash', CashController::class)->middleware(['role:Developer,Cashier,Manager']);
 
-    Route::resource('sales', SaleController::class)->middleware(['role:Developer,Cashier']);
-    Route::post('/sales/export', [SaleController::class, 'export'])->name('sales.export')->middleware(['role:Developer,Cashier']);
-    Route::get('/sales/{id}/print', [SaleController::class, 'print'])->name('sales.print')->middleware(['role:Developer,Cashier']);
+    Route::resource('sales', SaleController::class)->middleware(['role:Developer,Cashier,Manager']);
+    Route::post('/sales/export', [SaleController::class, 'export'])->name('sales.export')->middleware(['role:Developer,Cashier,Manager']);
+    Route::get('/sales/{id}/print', [SaleController::class, 'print'])->name('sales.print')->middleware(['role:Developer,Cashier,Manager']);
 
     // Resource routes for departments
     Route::resource('departments', DepartmentController::class)->middleware(['role:HR']);
 
-    Route::resource('products', ProductController::class)->middleware(['role:Developer,Cashier']);
+    Route::resource('products', ProductController::class)->middleware(['role:Developer,Cashier,Manager']);
 
     //Route::resource('pos', PosController::class)->middleware(['role:Developer,Cashier']);
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
         // Seed Departments table
         DB::table('departments')->insert([
+            ['name' => 'Store', 'description' => 'Store lead', 'status' => 'active', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'HR', 'description' => 'Human Resources', 'status' => 'active', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'IT', 'description' => 'Information Technology', 'status' => 'active', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Sales', 'description' => 'Sales and Marketing', 'status' => 'active', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
@@ -43,8 +44,8 @@ class DatabaseSeeder extends Seeder
                 'address' => $faker->address,
                 'birth_date' => $faker->dateTimeBetween('-40 years', '-20 years'),
                 'hire_date' => Carbon::now(),
-                'department_id' => 2,  // IT
-                'role_id' => 2,        // Developer
+                'department_id' => 3,  // IT
+                'role_id' => 3,        // Developer
                 // 'supervisor_id' => null,
                 'status' => 'active',
                 'salary' => $faker->randomFloat(2, 3000, 6000),
@@ -59,11 +60,27 @@ class DatabaseSeeder extends Seeder
                 'address' => $faker->address,
                 'birth_date' => $faker->dateTimeBetween('-35 years', '-25 years'),
                 'hire_date' => Carbon::now(),
-                'department_id' => 3,  // Sales
+                'department_id' => 4,  // Sales
                 'role_id' => 4,        // Cashier
                 // 'supervisor_id' => 1,  // John Doe (Manager)
                 'status' => 'active',
                 'salary' => $faker->randomFloat(2, 4000, 7000),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'deleted_at' => null,
+            ],
+            [
+                'fullname' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'phone_number' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'birth_date' => $faker->dateTimeBetween('-40 years', '-20 years'),
+                'hire_date' => Carbon::now(),
+                'department_id' => 2,  // IT
+                'role_id' => 1,        // Manager
+                // 'supervisor_id' => null,
+                'status' => 'active',
+                'salary' => $faker->randomFloat(2, 3000, 6000),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null,
@@ -82,6 +99,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'kasir@gmail.com',
             'password' => bcrypt('kasir'),
             'employee_id' => 2,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Rusdi',
+            'email' => 'manager@gmail.com',
+            'password' => bcrypt('manager1'),
+            'employee_id' => 3,
         ]);
 
         // Seed Customers table

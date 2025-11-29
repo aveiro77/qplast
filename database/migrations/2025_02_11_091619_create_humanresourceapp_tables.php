@@ -155,6 +155,26 @@ return new class extends Migration
             $table->softDeletes();
         });
 
+        Schema::create('cash_transactions', function (Blueprint $table) {
+            $table->id();
+            $table->date('date');
+            $table->enum('type', ['in', 'out'])->default('in');
+            $table->string('category')->nullable(); // e.g. penjualan, modal, operasional
+            $table->string('reference')->nullable();
+            $table->decimal('total', 15, 2)->default(0);
+            $table->text('notes')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('cash_transaction_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cash_transaction_id')->constrained('cash_transactions')->onDelete('cascade');
+            $table->string('description')->nullable();
+            $table->decimal('amount', 15, 2)->default(0);
+            $table->timestamps();
+        });
+
     }
 
     public function down()
@@ -172,5 +192,7 @@ return new class extends Migration
         Schema::dropIfExists('customers');
         Schema::dropIfExists('sales');
         Schema::dropIfExists('sale_details');
+        Schema::dropIfExists('cash_transactions');
+        Schema::dropIfExists('cash_transaction_details');
     }
 };
