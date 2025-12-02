@@ -28,18 +28,21 @@
                         </div> --}}
                         <div class="card-content">
                             <div class="card-body">
-                                {{-- <form class="form form-horizontal"> --}}
-                                    {{-- <div class="form-body"> --}}
-                                        <h6>Customer</h6>
-                                        <fieldset class="form-group">
-                                            <select class="form-select" x-model="customer_id">
-                                                @foreach ($customers as $c)
-                                                    <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->type }})</option>
-                                                @endforeach
-                                            </select>
-                                        </fieldset>           
-                                    {{-- </div> --}}
-                                {{-- </form> --}}
+                                <h6>Customer</h6>
+                                <fieldset class="form-group">
+                                    <select class="form-select" x-model="customer_id">
+                                        @foreach ($customers as $c)
+                                            <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->type }})</option>
+                                        @endforeach
+                                    </select>
+                                </fieldset>      
+                                <h6>Pembayaran</h6>
+                                <fieldset class="form-group">
+                                    <select class="form-select" x-model="payment_method" @change="paymentMethodChanged()">
+                                        <option value="Cash">Cash</option>
+                                        <option value="Transfer">Transfer</option>
+                                    </select>
+                                </fieldset>      
                             </div>
                         </div>
                     </div>
@@ -54,7 +57,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label class="form-label">Pembayaran</label>
-                                <input type="number" class="form-control" x-model.number="pembayaran" @input="updateKembalian" placeholder="0">
+                                <input type="number" class="form-control" x-model.number="pembayaran" @input="updateKembalian" :disabled="payment_method === 'Transfer'" min="0" placeholder="0">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Kembalian: <span x-text="formatRupiah(kembalian)"></span></label>
@@ -67,7 +70,10 @@
                             <form method="POST" action="{{ route('pos.store') }}" @submit.prevent="submitForm">
                                 @csrf
                                 <input type="hidden" name="customer_id" x-model="customer_id">
+                                <input type="hidden" name="payment_method" x-model="payment_method">
                                 <input type="hidden" name="cart" x-model="cartJson">
+                                <input type="hidden" name="paid_amount" :value="pembayaran">
+                                <input type="hidden" name="change_amount" :value="kembalian">
 
                                 <button class="mt-1 btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed" 
                                         :disabled="isLoading"
@@ -210,6 +216,7 @@
             products: productsData,
             categoriesData: @json($categories),
             customer_id: 1,
+            payment_method: 'Cash',
             cart: [],
             isLoading: false,
             pembayaran: 0,
@@ -218,6 +225,17 @@
 
             updateKembalian() {
                 this.kembalian = this.pembayaran - this.grandTotal;
+            },
+
+            paymentMethodChanged() {
+                if (this.payment_method === 'Transfer') {
+                    this.pembayaran = 0;
+                    this.kembalian = 0;
+                } else {
+                    // default pembayaran to grandTotal for convenience
+                    this.pembayaran = this.grandTotal;
+                    this.updateKembalian();
+                }
             },
 
             updateItem(index) {
@@ -276,13 +294,19 @@
                     this.showToast("Cart masih kosong!", "error");
                     return;
                 }
-                if (this.pembayaran === 0) {
-                    this.showToast("Pembayaran belum diisi!", "error");
-                    return;
-                }
-                if (this.pembayaran < this.grandTotal) {
-                    this.showToast("Pembayaran kurang sebesar " + this.formatRupiah(this.grandTotal - this.pembayaran), "error");
-                    return;
+                // Payment validation depends on payment method
+                if (this.payment_method === 'Cash') {
+                    if (this.pembayaran === 0) {
+                        this.showToast("Pembayaran belum diisi!", "error");
+                        return;
+                    }
+                    if (this.pembayaran < this.grandTotal) {
+                        this.showToast("Pembayaran kurang sebesar " + this.formatRupiah(this.grandTotal - this.pembayaran), "error");
+                        return;
+                    }
+                } else {
+                    // Transfer / non-cash: ensure kembalian is zero or ignored
+                    // keep frontend simple; server will enforce stricter rules
                 }
 
                 this.isLoading = true;
@@ -291,7 +315,10 @@
                     const formData = new FormData();
                     formData.append('_token', document.querySelector('input[name="_token"]').value);
                     formData.append('customer_id', this.customer_id);
+                    formData.append('payment_method', this.payment_method);
                     formData.append('cart', JSON.stringify(this.cart));
+                    formData.append('paid_amount', this.pembayaran);
+                    formData.append('change_amount', this.kembalian);
 
                     const response = await fetch("{{ route('pos.store') }}", {
                         method: 'POST',
@@ -313,6 +340,7 @@
                         // Reset form setelah sukses
                          this.cart = [];
                         this.customer_id = 1;
+                        this.payment_method = 'Cash';
                         this.pembayaran = 0;
                         this.kembalian = 0;
                         this.selected_category_id = 0;

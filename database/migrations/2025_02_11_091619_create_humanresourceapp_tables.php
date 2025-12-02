@@ -138,6 +138,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('note')->nullable();
             $table->foreignId('customer_id')->constrained('customers');
+            $table->string('payment_method');
             $table->decimal('total_price', 15, 2);
             $table->timestamps();
             $table->softDeletes();

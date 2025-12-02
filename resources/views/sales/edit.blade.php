@@ -51,7 +51,7 @@
                     @method('PUT')
 
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Customer</label>
                             <select name="customer_id" class="form-select" required>
                                 <option value="">-- Select Customer --</option>
@@ -60,13 +60,20 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Sale Name</label>
                             <input type="text" name="name" class="form-control" value="{{ $sale->name }}">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Note (optional)</label>
                             <input type="text" name="note" class="form-control" value="{{ $sale->note ?? '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Payment Method</label>
+                            <select name="payment_method" class="form-select" required>
+                                <option value="Cash" {{ $sale->payment_method == 'Cash' ? 'selected' : '' }}>Cash</option>
+                                <option value="Transfer" {{ $sale->payment_method == 'Transfer' ? 'selected' : '' }}>Transfer</option>
+                            </select>
                         </div>
                     </div>
 

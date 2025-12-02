@@ -45,6 +45,10 @@
                                 <td>{{ $sale->created_at->format('Y-m-d H:i:s') }}</td>
                             </tr>
                             <tr>
+                                <td><strong>Payment Method:</strong></td>
+                                <td>{{ $sale->payment_method }}</td>
+                            </tr>
+                            <tr>
                                 <td><strong>Type:</strong></td>
                                 <td>{{ $sale->name }}</td>
                             </tr>

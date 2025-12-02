@@ -19,7 +19,8 @@
             <a href="{{ route('reports.neraca.export', ['start'=>request('start', $start), 'end'=>request('end', $end)]) }}" class="btn btn-success">Export CSV</a>
         </div>
     </form>
-    <table class="table table-bordered w-50">
+    
+    <table class="table table-bordered w-75">
         <thead class="table-light">
             <tr>
                 <th>Item</th>
@@ -28,27 +29,36 @@
         </thead>
         <tbody>
             <tr>
-                <td>Total Penjualan</td>
+                <td><strong>Total Penjualan</strong></td>
                 <td class="text-end">Rp {{ number_format($totalSales ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>Total HPP</td>
+                <td>::: Cash</td>
+                <td class="text-end">Rp {{ number_format($totalCashSales ?? 0, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td>::: Transfer</td>
+                <td class="text-end">Rp {{ number_format($totalTransferSales ?? 0, 0, ',', '.') }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Total HPP</strong></td>
                 <td class="text-end">Rp {{ number_format($totalHpp ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>Omzet</td>
+                <td><strong>Omzet (Profit)</strong></td>
                 <td class="text-end">Rp {{ number_format($omzet ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>Kas Masuk</td>
+                <td><strong>Kas Masuk</strong></td>
                 <td class="text-end">Rp {{ number_format($cashIn ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>Kas Keluar</td>
+                <td><strong>Kas Keluar</strong></td>
                 <td class="text-end">Rp {{ number_format($cashOut ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>Net Cash Flow</td>
+                <td><strong>Net Cash Flow</strong></td>
                 <td class="text-end">Rp {{ number_format($netCash ?? 0, 0, ',', '.') }}</td>
             </tr>
         </tbody>

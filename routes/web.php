@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Cash transactions (kas masuk / kas keluar)
     Route::resource('cash', CashController::class)->middleware(['role:Developer,Cashier,Manager']);
+    Route::post('/cash/export', [CashController::class, 'export'])->name('cash.export')->middleware(['role:Developer,Cashier,Manager']);
 
     Route::resource('sales', SaleController::class)->middleware(['role:Developer,Cashier,Manager']);
     Route::post('/sales/export', [SaleController::class, 'export'])->name('sales.export')->middleware(['role:Developer,Cashier,Manager']);

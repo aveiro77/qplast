@@ -33,7 +33,17 @@ class ReportController extends Controller
         $cashOut = \App\Models\CashTransaction::where('type','out')->whereBetween('date', [$start, $end])->sum('total');
         $netCash = $cashIn - $cashOut;
 
-        return view('reports.neraca', compact('start', 'end', 'totalSales', 'totalHpp', 'omzet', 'cashIn', 'cashOut', 'netCash'));
+        // Total penjualan cash
+        $totalCashSales = \App\Models\Sale::where('payment_method', 'Cash')
+            ->whereBetween('created_at', [$start, $end])
+            ->sum('total_price');
+
+        // Total penjualan transfer
+        $totalTransferSales = \App\Models\Sale::where('payment_method', 'Transfer')
+            ->whereBetween('created_at', [$start, $end])
+            ->sum('total_price');
+
+        return view('reports.neraca', compact('start', 'end', 'totalSales', 'totalHpp', 'omzet', 'cashIn', 'cashOut', 'netCash', 'totalCashSales', 'totalTransferSales'));
     }
 
     // Export CSV (skeleton, implementasi menyusul)
@@ -54,11 +64,24 @@ class ReportController extends Controller
         $cashOut = \App\Models\CashTransaction::where('type','out')->whereBetween('date', [$start, $end])->sum('total');
         $netCash = $cashIn - $cashOut;
 
+        // Total penjualan cash dan transfer
+        $totalCashSales = \App\Models\Sale::where('payment_method', 'Cash')
+            ->whereBetween('created_at', [$start, $end])
+            ->sum('total_price');
+        $totalTransferSales = \App\Models\Sale::where('payment_method', 'Transfer')
+            ->whereBetween('created_at', [$start, $end])
+            ->sum('total_price');
+
         $rows = [
             ['Item', 'Nilai'],
+            ['PENJUALAN', ''],
             ['Total Penjualan', $totalSales],
+            ['- Cash', $totalCashSales],
+            ['- Transfer', $totalTransferSales],
             ['Total HPP', $totalHpp],
-            ['Omzet', $omzet],
+            ['Omzet (Profit)', $omzet],
+            ['', ''],
+            ['ARUS KAS', ''],
             ['Kas Masuk', $cashIn],
             ['Kas Keluar', $cashOut],
             ['Net Cash Flow', $netCash],

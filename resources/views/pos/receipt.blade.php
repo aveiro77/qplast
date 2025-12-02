@@ -11,7 +11,8 @@
   <div class="small">
     <div><strong>Invoice #{{ $sale->created_at->format('Ymd') }}{{ $sale->id }}</strong></div>
     <div>{{ $sale->created_at->format('Y-m-d H:i') }}</div>
-    <div>Customer: <strong>{{ optional($sale->customer)->name ?? 'Umum' }}</strong></div>
+    <div>Customer: <strong>{{ optional($sale->customer)->name ?? 'Customer' }}</strong></div>
+    <div>Payment Method: <strong>{{ $sale->payment_method ?? '-' }}</strong></div>
   </div>
 
   <hr>
@@ -40,6 +41,18 @@
       <div>Total:</div>
       <div>Rp {{ number_format($sale->total_price,0,',','.') }}</div>
     </div>
+    @if($sale->paid_amount > 0)
+    <div style="display:flex; justify-content:space-between; margin-top:8px;">
+      <div>Paid:</div>
+      <div>Rp {{ number_format($sale->paid_amount,0,',','.') }}</div>
+    </div>
+    @endif
+    @if($sale->change_amount > 0)
+    <div style="display:flex; justify-content:space-between; margin-top:4px;">
+      <div>Change:</div>
+      <div>Rp {{ number_format($sale->change_amount,0,',','.') }}</div>
+    </div>
+    @endif
   </div>
 
   <hr>

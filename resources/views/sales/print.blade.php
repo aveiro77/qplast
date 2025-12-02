@@ -52,7 +52,8 @@
   <div class="container">
     <div class="header">
       <div class="company">Qurnia Plastik</div>
-      <div class="meta">Jl. Contoh No.123 — Telp: 0812-xxxx-xxxx</div>
+      <div class="meta">Rumah botol plastik & kemasan</div>
+      <div class="meta">Jl. Seruni no.79 Kota Pekalongan • Telp: 0856-4026-0203</div>
     </div>
 
     <div style="display:flex; justify-content:space-between; margin-top:8px;">
@@ -60,6 +61,7 @@
         <div><strong>Invoice:</strong> #{{ $sale->created_at->format('Ymd') }}{{ $sale->id }}</div>
         <div><strong>Date:</strong> {{ $sale->created_at->format('Y-m-d H:i') }}</div>
         <div><strong>Type:</strong> {{ $sale->name }}</div>
+        <div><strong>Payment Method:</strong> {{ $sale->payment_method }}</div>
       </div>
       <div style="font-size:13px; text-align:right;">
         <div><strong>Customer</strong></div>

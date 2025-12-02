@@ -83,6 +83,7 @@
                             <th>Type</th>
                             <th>Date</th>
                             <th>Customer</th>
+                            <th>Payment</th>
                             <th>Total</th>
                             <th>Option</th>
                         </tr>
@@ -94,6 +95,7 @@
                                 <td>{{ $sale->name }}</td>
                                 <td>{{ $sale->created_at }}</td>
                                 <td>{{ $sale->customer->name }}</td>
+                                <td>{{ $sale->payment_method }}</td>
                                 <td>Rp {{ number_format($sale->total_price,0,',','.') }}</td>
 
                                 <td>

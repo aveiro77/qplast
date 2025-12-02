@@ -50,7 +50,7 @@
                     @csrf
 
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Customer</label>
                             <select name="customer_id" class="form-select" required>
                                 <option value="">-- Select Customer --</option>
@@ -59,13 +59,20 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Sale Name</label>
+                        <div class="col-md-6">
+                            <label class="form-label">Sale Type</label>
                             <input type="text" name="name" class="form-control" value="{{ old('name', 'B2B') }}">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Note (optional)</label>
                             <input type="text" name="note" class="form-control" value="{{ old('note') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Payment Method</label>
+                            <select name="payment_method" class="form-select" required>
+                                <option value="Cash">Cash</option>
+                                <option value="Transfer">Transfer</option>
+                            </select>
                         </div>
                     </div>
 

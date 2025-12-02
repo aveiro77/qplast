@@ -40,6 +40,7 @@ class SaleController extends Controller
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'payment_method' => 'required|string|max:30',
             'name' => 'nullable|string|max:191',
             'note' => 'nullable|string',
             'items' => 'required|string', // JSON string from client
@@ -90,7 +91,8 @@ class SaleController extends Controller
         try {
             $sale = Sale::create([
                 'customer_id' => $validated['customer_id'],
-                'name' => $validated['name'] ?? 'Manual Sale',
+                'payment_method' => $validated['payment_method'],
+                'name' => $validated['name'] ?? 'B2B',
                 'note' => $validated['note'] ?? null,
                 'total_price' => $total,
             ]);
@@ -152,6 +154,7 @@ class SaleController extends Controller
             'Type',
             'Date',
             'Customer',
+            'Payment',
             'Product',
             'Quantity',
             'Unit',
@@ -169,12 +172,13 @@ class SaleController extends Controller
                     $sale->name,
                     $sale->created_at->format('Y-m-d H:i:s'),
                     $sale->customer->name ?? '-',
+                    $sale->payment_method ?? '-',
                     '-',
                     '-',
                     '-',
                     '-',
                     '-',
-                    $sale->total_price,
+                    (int)$sale->total_price,
                 ], ';');
             } else {
                 // Write first detail row with sale info
@@ -185,12 +189,13 @@ class SaleController extends Controller
                         $isFirst ? $sale->name : '',
                         $isFirst ? $sale->created_at->format('Y-m-d H:i:s') : '',
                         $isFirst ? $sale->customer->name ?? '-' : '',
+                        $isFirst ? $sale->payment_method ?? '-' : '',
                         $detail->product->name ?? '-',
-                        $detail->quantity,
+                        (int)$detail->quantity,
                         $detail->unit ?? '-',
-                        $detail->price,
-                        $detail->subtotal,
-                        $isFirst ? $sale->total_price : '',
+                        (int)$detail->price,
+                        (int)$detail->subtotal,
+                        $isFirst ? (int)$sale->total_price : '',
                     ], ';');
                     $isFirst = false;
                 }
@@ -225,6 +230,7 @@ class SaleController extends Controller
 
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'payment_method' => 'required|string|max:30',
             'name' => 'nullable|string|max:191',
             'note' => 'nullable|string',
             'items' => 'required|string',
@@ -291,6 +297,7 @@ class SaleController extends Controller
 
             $sale->update([
                 'customer_id' => $validated['customer_id'],
+                'payment_method' => $validated['payment_method'],
                 'name' => $validated['name'] ?? 'Manual Sale',
                 'note' => $validated['note'] ?? null,
                 'total_price' => $total,
