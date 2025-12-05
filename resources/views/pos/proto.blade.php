@@ -195,6 +195,7 @@
                                 <!-- Menggunakan x-text langsung pada h5 untuk judul -->
                                 <h6 class="card-title" x-text="p.name"></h6>
                                 <h6 class="card-title" x-text="'Satuan:' +' '+ p.unit"></h6>
+                                <small class="text-muted" x-text="p.description"></small>
                                 <p class="card-text mt-3">
                                     <span class="d-block text-primary fw-bold" x-text="formatRupiah(p.unit === 'Ball' ? p.hrg_ball : p.hrg_ecer)"></span>
                                     <small class="text-muted" x-text="'Stok: ' + p.stock +' '+ p.unit"></small>

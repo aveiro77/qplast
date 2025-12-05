@@ -71,6 +71,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" class="form-control" id="description" rows="3">{{ old('description', $product->description) }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="unit" class="form-label">Unit</label>
                         <select name="unit" id="unit" class="form-control" required>
                             <option value="Ball" {{ $product->unit == 'Ball' ? 'selected' : '' }}>Ball</option>

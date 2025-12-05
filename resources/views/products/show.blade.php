@@ -77,7 +77,6 @@
                             <label class="form-label">Harga Ecer</label>
                             <p>{{ 'Rp ' . number_format($product->hrg_ecer, 0, ',', '.') }}</p>
                         </div>
-
                     </div>
                     <div>
                         <label class="form-label">Product Image</label>
@@ -87,7 +86,17 @@
                             @else
                                 <p>No image available.</p>
                             @endif
-                    </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <div>
+                                @if($product->description)
+                                    <p>{{ $product->description }}</p>
+                                @else
+                                    <p>No description available.</p>
+                                @endif
+                        </div>
                 </div>
 
                 <a href="{{ route('products.index') }}" class="btn btn-secondary mt-3">Back to Products</a>
