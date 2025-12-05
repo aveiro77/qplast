@@ -176,6 +176,25 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('affals', function (Blueprint $table) {
+            $table->id();
+            $table->integer('qty_stock')->default(0);
+            $table->decimal('price', 15, 2)->default(0);
+            $table->timestamps();
+        });
+
+        // Insert initial record
+        \DB::table('affals')->insert(['qty_stock' => 0, 'price' => 0]);
+
+        Schema::create('affals_transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->integer('qty_moved');
+            $table->text('notes')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->timestamps();
+        });
+
     }
 
     public function down()
@@ -195,5 +214,7 @@ return new class extends Migration
         Schema::dropIfExists('sale_details');
         Schema::dropIfExists('cash_transactions');
         Schema::dropIfExists('cash_transaction_details');
+        Schema::dropIfExists('affals');
+        Schema::dropIfExists('affals_transactions');
     }
 };

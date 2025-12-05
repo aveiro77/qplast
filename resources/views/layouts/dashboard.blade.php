@@ -271,6 +271,13 @@
                                 </a>
                             </li>
 
+                            <li class="sidebar-item">
+                                <a href="{{ url('/affals') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Affals</span>
+                                </a>
+                            </li>
+
 
                         @endif
 

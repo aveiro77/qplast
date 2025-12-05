@@ -18,6 +18,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\AffalsController;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
@@ -48,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('sales', SaleController::class)->middleware(['role:Developer,Cashier,Manager']);
     Route::post('/sales/export', [SaleController::class, 'export'])->name('sales.export')->middleware(['role:Developer,Cashier,Manager']);
     Route::get('/sales/{id}/print', [SaleController::class, 'print'])->name('sales.print')->middleware(['role:Developer,Cashier,Manager']);
+
+    Route::resource('affals', AffalsController::class)->middleware('role:Developer,Cashier,Manager');
 
     // Resource routes for departments
     Route::resource('departments', DepartmentController::class)->middleware(['role:HR']);
