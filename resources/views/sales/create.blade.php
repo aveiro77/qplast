@@ -98,7 +98,7 @@
                                                 <select class="form-select" x-model="row.product_id" @change="onProductChange(idx)" required>
                                                     <option value="">-- choose product --</option>
                                                     <template x-for="p in products" :key="p.id">
-                                                        <option :value="p.id" x-text="p.name" :selected="row.product_id == p.id"></option>
+                                                        <option :value="p.id" x-text="p.name + ', Satuan: ' + p.unit" :selected="row.product_id == p.id"></option>
                                                     </template>
                                                 </select>
                                             </td>
