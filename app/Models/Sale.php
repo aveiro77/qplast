@@ -13,6 +13,7 @@ class Sale extends Model
         'name',
         'note',
         'customer_id',
+        'user_id',
         'payment_method',
         'total_price',
         'paid_amount',
@@ -28,6 +29,11 @@ class Sale extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function saleDetails()

@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class SaleController extends Controller
@@ -91,6 +92,7 @@ class SaleController extends Controller
         try {
             $sale = Sale::create([
                 'customer_id' => $validated['customer_id'],
+                'user_id' => Auth::id(),
                 'payment_method' => $validated['payment_method'],
                 'name' => $validated['name'] ?? 'B2B',
                 'note' => $validated['note'] ?? null,

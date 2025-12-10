@@ -12,6 +12,7 @@
     <div><strong>Invoice #{{ $sale->created_at->format('Ymd') }}{{ $sale->id }}</strong></div>
     <div>{{ $sale->created_at->format('Y-m-d H:i') }}</div>
     <div>Customer: <strong>{{ optional($sale->customer)->name ?? 'Customer' }}</strong></div>
+    <div>Cashier: <strong>{{ optional($sale->user)->name ?? '-' }}</strong></div>
     <div>Payment Method: <strong>{{ $sale->payment_method ?? '-' }}</strong></div>
   </div>
 

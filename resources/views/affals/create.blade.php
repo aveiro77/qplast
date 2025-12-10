@@ -55,9 +55,11 @@
                                 <select name="product_id" class="form-select" required>
                                     <option value="">-- Pilih Produk --</option>
                                     @foreach($products as $p)
-                                        <option value="{{ $p->id }}" {{ old('product_id') == $p->id ? 'selected' : '' }}>
-                                            {{ $p->name }} (Stok: {{ $p->stock }})
+                                        @if($p->stock > 0 && $p->unit == 'Pcs')
+                                            <option value="{{ $p->id }}" {{ old('product_id') == $p->id ? 'selected' : '' }}>
+                                            {{ $p->name }} (Stok: {{ $p->stock }} {{ $p->unit }})
                                         </option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('product_id')
@@ -92,7 +94,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Info Affal</h5>
@@ -106,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
 </div>

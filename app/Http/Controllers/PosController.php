@@ -126,6 +126,7 @@ class PosController extends Controller
             // 4. Simpan header transaksi dengan paid/change
             $sale = Sale::create([
                 'customer_id'   => $request->customer_id,
+                'user_id'       => Auth::id(),
                 'payment_method'   => $request->payment_method,
                 'name'          => 'Penjualan POS',
                 'total_price'   => $total,

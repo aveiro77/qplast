@@ -31,14 +31,14 @@
             <div class="col-12 col-md-8">
                 <a href="{{ route('affals.create') }}" class="btn btn-primary">+ Keluarkan Stok ke Affal</a>
             </div>
-            <div class="col-12 col-md-4 text-md-end">
+            <!-- <div class="col-12 col-md-4 text-md-end">
                 <div class="card">
                     <div class="card-body py-2">
                         <small class="text-muted">Stok Affal: <strong>{{ $affal->qty_stock }} unit</strong></small> | 
                         <small class="text-muted">Harga: <strong>Rp {{ number_format($affal->price, 0, ',', '.') }}</strong></small>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="card">
@@ -53,7 +53,7 @@
                             <tr>
                                 <th>Tanggal</th>
                                 <th>Produk</th>
-                                <th>Qty Dikeluarkan</th>
+                                <th>Jumlah Dikeluarkan</th>
                                 <th>Catatan</th>
                                 <th>Dicatat Oleh</th>
                                 <th class="text-end">Aksi</th>
@@ -64,7 +64,7 @@
                             <tr>
                                 <td>{{ $t->created_at->format('Y-m-d H:i') }}</td>
                                 <td><strong>{{ $t->product->name }}</strong></td>
-                                <td>{{ $t->qty_moved }} unit</td>
+                                <td>{{ $t->qty_moved }} {{ $t->product->unit }}</td>
                                 <td><small>{{ $t->notes ?? '-' }}</small></td>
                                 <td>{{ $t->createdBy->name ?? '-' }}</td>
                                 <td class="text-end">

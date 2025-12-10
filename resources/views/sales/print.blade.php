@@ -61,6 +61,7 @@
         <div><strong>Invoice:</strong> #{{ $sale->created_at->format('Ymd') }}{{ $sale->id }}</div>
         <div><strong>Date:</strong> {{ $sale->created_at->format('Y-m-d H:i') }}</div>
         <div><strong>Type:</strong> {{ $sale->name }}</div>
+        <div><strong>Entry By:</strong> {{ optional($sale->user)->name ?? '-' }}</div>
         <div><strong>Payment Method:</strong> {{ $sale->payment_method }}</div>
       </div>
       <div style="font-size:13px; text-align:right;">

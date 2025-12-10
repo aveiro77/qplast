@@ -140,6 +140,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers');
             $table->string('payment_method');
             $table->decimal('total_price', 15, 2);
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete()->after('customer_id');
             $table->timestamps();
             $table->softDeletes();
         });
