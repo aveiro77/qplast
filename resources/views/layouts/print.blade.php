@@ -5,9 +5,9 @@
   <title>Struk - Qplast</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-    /* Print layout minimal, cocok untuk thermal 58mm (~300px) */
+    /* Print layout minimal, cocok untuk thermal 75mm (~283px) */
     body { font-family: Arial, Helvetica, sans-serif; color:#000; margin:0; padding:0; background:#fff; }
-    .receipt { width: 300px; padding: 8px 10px; margin:0 auto; }
+    .receipt { width: 75mm; padding: 4px 5px; margin:0 auto; }
     h1,h2,h3 { margin:0; padding:0; font-weight:700; }
     .center { text-align:center; }
     .logo { font-size:18px; font-weight:700; color:#000; margin-bottom:6px; }

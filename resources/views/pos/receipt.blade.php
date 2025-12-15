@@ -4,7 +4,7 @@
   <div class="center">
     <div class="logo">Qurnia Plastik</div>
     <div class="small">Rumah botol plastik & kemasan</div>
-    <div class="small">Jl. Seruni no.79 Kota Pekalongan • Telp: 0856-4026-0203</div>
+    <div class="small">Jl. Seruni no.79,  Poncol, Kota Pekalongan</div>
     <hr>
   </div>
 
@@ -24,6 +24,11 @@
       <tr>
         <td class="item-name" style="width:60%;">{{ optional($d->product)->name ?? '(produk)' }}</td>
         <td class="price-col" style="width:40%;">{{ number_format($d->subtotal,0,',','.') }}</td>
+      </tr>
+      <tr>
+        <td class="item-details" colspan="2">
+          {{ $d->product->description }}
+        </td>
       </tr>
       <tr>
         <td class="item-details" colspan="2">
