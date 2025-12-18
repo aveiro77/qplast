@@ -7,7 +7,7 @@
   <style>
     /* Print layout minimal, cocok untuk thermal 75mm (~283px) */
     body { font-family: Arial, Helvetica, sans-serif; color:#000; margin:0; padding:0; background:#fff; }
-    .receipt { width: 75mm; padding: 4px 5px; margin:0 auto; }
+    .receipt { width: 74mm; padding: 4px 0px; margin:0 auto; }
     h1,h2,h3 { margin:0; padding:0; font-weight:700; }
     .center { text-align:center; }
     .logo { font-size:18px; font-weight:700; color:#000; margin-bottom:6px; }
